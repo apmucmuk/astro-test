@@ -1,0 +1,107 @@
+---
+title: "Przeprowadzka biura bez przestojów – case study z Warszawy"
+description: "Jak firma technologiczna z 60 pracownikami przeprowadziła się z Mokotowa na Wolę w ciągu jednego weekendu, zachowując ciągłość operacyjną. Konkrety, błędy i wnioski."
+pubDate: 2025-04-10
+category: nietypowe
+type: realizacja
+audience: firma
+stage: w-trakcie
+author: "Redakcja Tragarze.pl"
+---
+
+## Kontekst: firma, wyzwanie, ograniczenia
+
+W październiku 2024 roku skontaktowała się z nami firma technologiczna SoftBridge – 60 pracowników, biuro na Mokotowie (ul. Domaniewska), przeprowadzka do nowej przestrzeni na Woli (ul. Prosta). Odległość: 7 km. Deadline: jeden weekend. Budżet: 28 000 zł brutto na całą operację.
+
+Wyzwania, które sami zdefiniowali:
+- **Infrastruktura IT** – 14 serwerów, 60 stacji roboczych, okablowanie, macierze
+- **Ciągłość operacyjna** – firma świadczyła usługi SaaS; przestój musiał być krótszy niż 4 godziny
+- **Archiwum dokumentów** – 80 segregatorów + 12 szaf na dokumenty niejawne (zgodnie z RODO zabezpieczone osobno)
+- **Meble pod zamówienie** – część wyposażenia wymagała demontażu przez producenta
+
+## Faza planowania – 6 tygodni przed
+
+### Inwentaryzacja i kategoryzacja
+
+Pierwszym krokiem była szczegółowa inwentaryzacja – nie przybliżona, lecz pozycja po pozycji. Manager biura spędził dwa dni chodząc po piętrach z formularzem Excel: każde biurko, krzesło, szafa, monitor, okablowanie zostały skatalogowane z przypisanym priorytetem transportu.
+
+Kategorie:
+- **Czerwona (nie można ruszać bez IT)** – serwery, switch, NAS
+- **Żółta (transport z ostrożnością)** – monitory, drukarki, sprzęt AV
+- **Zielona (standardowy transport)** – meble, kartony osobiste, kuchnia
+
+### Harmonogram weekendu
+
+| Czas | Co się dzieje |
+|---|---|
+| Piątek 18:00 | Zakończenie pracy, start pakowania przez pracowników |
+| Piątek 20:00 | Ekipa IT odłącza serwery i pakuje infrastrukturę |
+| Sobota 06:00 | Ekipa transportowa (8 osób, 2 pojazdy) rozpoczyna załadunek |
+| Sobota 10:00 | Pierwsza część mebli w nowym biurze |
+| Sobota 12:00 | IT podłącza i testuje infrastrukturę na nowym miejscu |
+| Sobota 16:00 | Backup i testy aplikacji SaaS |
+| Niedziela 08:00 | Drugie auto z resztą wyposażenia |
+| Niedziela 14:00 | Nowe biuro gotowe w 90% |
+| Poniedziałek 08:30 | Wszyscy pracownicy na miejscu – pełna operacyjność |
+
+### Komunikacja z pracownikami
+
+Trzy tygodnie przed przeprowadzką każdy pracownik dostał maila z instrukcją:
+- Co zapakować samodzielnie (rzeczy osobiste z biurka: max 1 karton)
+- Co zostawić (sprzęt firmowy – IT zajmie się nim osobno)
+- Jak oznaczyć karton (imię + dział + nowe stanowisko wg planu nowego biura)
+
+Plan rozmieszczenia nowego biura był rozesłany z wyprzedzeniem tygodnia, żeby każdy wiedział, gdzie siada od poniedziałku.
+
+## Faza transportu – weekend D
+
+### Co zadziałało lepiej niż planowano
+
+**Segregacja pionów** – transportowanie całego pionu (np. cały dział Customer Success razem) zamiast piętro po piętrze znacznie przyspieszyło rozładunek. Ekipa wiedziała dokładnie, gdzie co nieść.
+
+**Oznakowanie kartonów kodem QR** – manager biura użył aplikacji do zarządzania przeprowadzką (Sortly), która generuje kody QR dla każdego kartonu. Skan przy załadunku i rozładunku dał dokładny czas transportu i potwierdzenie, że nic nie zaginęło. Całkowity czas oznakowania 240 kartonów: 3 godziny.
+
+**Bufor czasowy** – harmonogram zakładał zakończenie transportu w niedzielę o 12:00. Skończyliśmy o 14:00. Dwugodzinny bufor był wbudowany w plan od początku.
+
+### Co poszło nie tak
+
+**Demontaż mebli pod zamówienie trwał dwa razy dłużej niż planowano.** Producent wysłał jednego technika zamiast dwóch. Rozwiązanie: ekipa transportowa pomogła przy prostszych elementach, technik skupił się na skomplikowanych mechanizmach.
+
+**Serwer backupowy odpalił alarm SMART** przy ponownym uruchomieniu – okazało się, że jeden dysk już był w złym stanie przed przeprowadzką, a wibracje podczas transportu przyspieszyły jego awarię. Wymiana dysku zajęła 2 godziny, ale backup był aktualny (testy DB przed i po transporcie to standard, który uratował sytuację).
+
+**Część pracowników nie zapakowała rzeczy osobistych do piątku 18:00.** Ekipa transportowa musiała poczekać 45 minut na spakowanie kilku stanowisk. Wniosek: kolejnym razem pakowanie osobiste powinno być zakończone do czwartku EOD, z piątkowym obchodem managera.
+
+## Koszty i rozliczenie
+
+| Pozycja | Koszt |
+|---|---|
+| Firma transportowa (8 osób, 2 auta, 2 dni) | 14 400 zł |
+| Materiały do pakowania (kartony, folia, taśma) | 1 800 zł |
+| Demontaż/montaż mebli pod zamówienie | 3 200 zł |
+| Ekipa IT (2 specjalistów, weekend) | 4 800 zł |
+| Aplikacja do inwentaryzacji (Sortly, 1 miesiąc) | 280 zł |
+| Wyżywienie ekipy przez weekend | 1 100 zł |
+| **Razem** | **25 580 zł** |
+
+Zmieścili się poniżej budżetu o ponad 2 000 zł. Czas faktycznego przestoju usług SaaS: **2 godziny i 20 minut** (sobota, godziny nierobocze).
+
+## Wnioski i rekomendacje dla firm
+
+**1. Zatrudnij project managera na czas przeprowadzki.**  
+Nawet jeśli to wewnętrzna osoba, musi mieć tę jedną odpowiedzialność przez minimum 6 tygodni.
+
+**2. IT przeprowadza się jako pierwsza i jako ostatnia.**  
+Infrastruktura powinna wyjść z starego biura na końcu (po transporcie mebli) i wejść do nowego jako pierwsza – tak żeby mieć czas na testy przed poniedziałkowym przyjazdem pracowników.
+
+**3. Plan nowego biura gotowy minimum miesiąc wcześniej.**  
+Każde stanowisko na mapie = każdy karton wie, gdzie jechać.
+
+**4. Wbuduj buffer 20–30% czasu do harmonogramu.**  
+Zawsze coś idzie nie tak. Nie dlatego, że firma transportowa jest zła – po prostu złożone operacje mają swoje niespodzianki.
+
+**5. Testuj infrastrukturę przed demontażem i po montażu.**  
+Backup, snapshot VM, testy aplikacji – nie ma mowy o transporcie bez pełnej weryfikacji stanu wyjściowego.
+
+## Podsumowanie
+
+Przeprowadzka biura to projekt logistyczny, nie przypadkowe działanie. SoftBridge udowodnił, że 60 osób można przeprowadzić w weekend bez większego przestoju – ale tylko dzięki 6 tygodniom planowania, szczegółowej inwentaryzacji i świadomości, że problemy pojawią się i trzeba mieć plan B. Jeśli planujesz przeprowadzkę biura, skontaktuj się z nami – pomożemy oszacować zakres i zaplanować operację.

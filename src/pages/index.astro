@@ -1,52 +1,210 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
+import BlogLayout from '../layouts/BlogLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { categoryLabels } from '../lib/labels';
 
 const posts = await getCollection('blog');
 const sorted = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const latest = sorted.slice(0, 3);
 
-const categories = [
-  { name: 'Технологии', slug: 'technology' },
-  { name: 'Путешествия', slug: 'travel' },
-];
+const categories = Object.entries(categoryLabels);
 ---
-<Layout title="МойБлог — технологии и путешествия">
-  <section style="margin-bottom: 2.5rem;">
-    <h1 class="page-title">МойБлог</h1>
-    <p class="page-subtitle">Пишу о технологиях и путешествиях</p>
-
-    <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
-      {categories.map(cat => (
-        <a href={`/category/${cat.slug}`} class="post-card" style="padding:0.75rem 1.25rem; font-weight:600; color:#2563eb;">
-          {cat.name} →
-        </a>
-      ))}
+<BlogLayout
+  title="Tragarze.pl – Blog o przeprowadzkach"
+  description="Praktyczne poradniki, porównania i case studies o przeprowadzkach w Polsce. Planowanie, koszty, formalności i wszystko, co musisz wiedzieć."
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <p class="hero-kicker">Blog o przeprowadzkach</p>
+        <h1 class="hero-title">
+          Przeprowadź się<br />
+          <span class="hero-accent">bez stresu i niespodzianek</span>
+        </h1>
+        <p class="hero-desc">
+          Praktyczne poradniki, rzetelne porównania cen i case studies
+          z polskiego rynku przeprowadzkowego.
+        </p>
+        <a href="/blog" class="hero-btn">Przeglądaj artykuły →</a>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-boxes">
+          <div class="box box--lg">📦</div>
+          <div class="box box--sm">🔑</div>
+          <div class="box box--md">🚛</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2 style="font-size:1.1rem; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem;">
-      Все статьи
-    </h2>
-
-    <div class="posts-grid">
-      {sorted.map(post => {
-        const date = post.data.pubDate.toLocaleDateString('ru-RU', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        });
-        return (
-          <article class="post-card">
-            <a href={`/category/${post.data.categorySlug}`} class="category-tag">
-              {post.data.category}
-            </a>
-            <h2><a href={`/blog/${post.id}`}>{post.data.title}</a></h2>
-            <p>{post.data.description}</p>
-            <span class="meta">{date}</span>
-          </article>
-        );
-      })}
+  <!-- Categories -->
+  <section class="section-categories">
+    <div class="container">
+      <h2 class="section-title">Przeglądaj według kategorii</h2>
+      <div class="categories-grid">
+        {categories.map(([slug, label]) => (
+          <a href={`/blog?category=${slug}`} class="category-card">
+            <span class="cat-label">{label}</span>
+            <span class="cat-arrow">→</span>
+          </a>
+        ))}
+      </div>
     </div>
   </section>
-</Layout>
+
+  <!-- Latest posts -->
+  <section class="section-latest">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Ostatnie artykuły</h2>
+        <a href="/blog" class="see-all">Zobacz wszystkie →</a>
+      </div>
+      <div class="posts-grid">
+        {latest.map(post => (
+          <PostCard
+            id={post.id}
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            category={post.data.category}
+            type={post.data.type}
+            audience={post.data.audience}
+            stage={post.data.stage}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BlogLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--clr-primary) 0%, #2d5282 100%);
+    color: #fff;
+    padding: var(--sp-16) 0;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-10);
+    align-items: center;
+  }
+  @media (min-width: 768px) {
+    .hero-inner { grid-template-columns: 3fr 2fr; }
+  }
+
+  .hero-kicker {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--clr-accent);
+    margin-bottom: var(--sp-3);
+  }
+  .hero-title {
+    font-size: clamp(1.75rem, 4vw, var(--text-4xl));
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: var(--sp-5);
+  }
+  .hero-accent { color: var(--clr-accent); }
+  .hero-desc {
+    font-size: var(--text-lg);
+    color: rgba(255,255,255,0.85);
+    max-width: 42ch;
+    margin-bottom: var(--sp-8);
+    line-height: 1.7;
+  }
+  .hero-btn {
+    display: inline-block;
+    background: var(--clr-accent);
+    color: #fff;
+    padding: var(--sp-3) var(--sp-6);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .hero-btn:hover { background: var(--clr-accent-hover); text-decoration: none; }
+
+  .hero-visual { display: none; }
+  @media (min-width: 768px) { .hero-visual { display: flex; justify-content: center; } }
+
+  .hero-boxes { position: relative; width: 180px; height: 180px; }
+  .box {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .box--lg { width: 110px; height: 110px; font-size: 3rem; top: 20px; left: 10px; }
+  .box--sm { width: 65px;  height: 65px;  font-size: 1.8rem; top: 0; right: 0; }
+  .box--md { width: 80px;  height: 80px;  font-size: 2rem; bottom: 0; right: 20px; }
+
+  /* Categories */
+  .section-categories { padding: var(--sp-12) 0; background: var(--clr-bg-alt); }
+  .section-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    margin-bottom: var(--sp-6);
+  }
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-3);
+  }
+  @media (min-width: 640px) {
+    .categories-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .category-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--clr-bg);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    color: var(--clr-primary);
+    text-decoration: none;
+    transition: box-shadow 0.15s, transform 0.15s;
+  }
+  .category-card:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: var(--clr-accent);
+  }
+  .cat-arrow { color: var(--clr-accent); }
+
+  /* Latest */
+  .section-latest { padding: var(--sp-12) 0; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: var(--sp-6);
+    gap: var(--sp-4);
+  }
+  .see-all {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--clr-accent);
+    white-space: nowrap;
+  }
+  .posts-grid {
+    display: grid;
+    gap: var(--sp-5);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px)  { .posts-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .posts-grid { grid-template-columns: repeat(3, 1fr); } }
+</style>

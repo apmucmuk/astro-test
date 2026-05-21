@@ -1,6 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import PostCard from '../../components/PostCard.astro';
+import { categoryLabels, typeLabels, audienceLabels, stageLabels } from '../../lib/labels';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -11,29 +14,258 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
-const pubDate = post.data.pubDate.toLocaleDateString('ru-RU', {
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
+const allPosts = await getCollection('blog');
+const related = allPosts
+  .filter(p => p.id !== post.id && p.data.category === post.data.category)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const pubDate = post.data.pubDate.toLocaleDateString('pl-PL', {
+  day: 'numeric', month: 'long', year: 'numeric',
+});
+const updDate = post.data.updatedDate?.toLocaleDateString('pl-PL', {
+  day: 'numeric', month: 'long', year: 'numeric',
 });
 ---
-<Layout title={post.data.title} description={post.data.description}>
-  <a href="/" class="back-link">← Все статьи</a>
+<BlogLayout
+  title={post.data.title}
+  description={post.data.description}
+  pubDate={post.data.pubDate}
+  updatedDate={post.data.updatedDate}
+  type="article"
+>
+  <div class="container article-layout">
+    <!-- Sidebar / TOC -->
+    <aside class="article-sidebar">
+      <div class="sidebar-sticky">
+        <TableOfContents headings={headings} />
 
-  <article>
-    <header class="article-header">
-      <a href={`/category/${post.data.categorySlug}`} class="category-tag">
-        {post.data.category}
-      </a>
-      <h1>{post.data.title}</h1>
-      <p class="description">{post.data.description}</p>
-      <time class="date">{pubDate}</time>
-    </header>
+        <div class="sidebar-meta">
+          <p class="meta-label">Kategoria</p>
+          <a href={`/blog?category=${post.data.category}`} class="badge badge--category sidebar-badge">
+            {categoryLabels[post.data.category]}
+          </a>
 
-    <div class="prose">
-      <Content />
-    </div>
-  </article>
-</Layout>
+          <p class="meta-label">Typ</p>
+          <span class="badge badge--type sidebar-badge">
+            {typeLabels[post.data.type]}
+          </span>
+
+          <p class="meta-label">Odbiorca</p>
+          <span class="badge badge--audience sidebar-badge">
+            {audienceLabels[post.data.audience]}
+          </span>
+
+          <p class="meta-label">Etap</p>
+          <span class="badge badge--stage sidebar-badge">
+            {stageLabels[post.data.stage]}
+          </span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main article -->
+    <article class="article-main">
+      <header class="article-header">
+        <nav class="breadcrumb" aria-label="Ścieżka nawigacji">
+          <a href="/">Strona główna</a>
+          <span aria-hidden="true">›</span>
+          <a href="/blog">Blog</a>
+          <span aria-hidden="true">›</span>
+          <a href={`/blog?category=${post.data.category}`}>
+            {categoryLabels[post.data.category]}
+          </a>
+        </nav>
+
+        <div class="article-badges">
+          <span class="badge badge--category">{categoryLabels[post.data.category]}</span>
+          <span class="badge badge--type">{typeLabels[post.data.type]}</span>
+          <span class="badge badge--audience">{audienceLabels[post.data.audience]}</span>
+          <span class="badge badge--stage">{stageLabels[post.data.stage]}</span>
+        </div>
+
+        <h1 class="article-title">{post.data.title}</h1>
+        <p class="article-desc">{post.data.description}</p>
+
+        <div class="article-meta">
+          <span>Autor: <strong>{post.data.author}</strong></span>
+          <span>
+            Opublikowano: <time datetime={post.data.pubDate.toISOString()}>{pubDate}</time>
+          </span>
+          {updDate && (
+            <span>
+              Zaktualizowano: <time datetime={post.data.updatedDate?.toISOString()}>{updDate}</time>
+            </span>
+          )}
+        </div>
+      </header>
+
+      <!-- Mobile TOC -->
+      <div class="mobile-toc">
+        <TableOfContents headings={headings} />
+      </div>
+
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </div>
+
+  <!-- Related posts -->
+  {related.length > 0 && (
+    <section class="related-section">
+      <div class="container">
+        <h2 class="related-title">
+          Podobne artykuły z kategorii „{categoryLabels[post.data.category]}"
+        </h2>
+        <div class="related-grid">
+          {related.map(p => (
+            <PostCard
+              id={p.id}
+              title={p.data.title}
+              description={p.data.description}
+              pubDate={p.data.pubDate}
+              category={p.data.category}
+              type={p.data.type}
+              audience={p.data.audience}
+              stage={p.data.stage}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BlogLayout>
+
+<style>
+  /* Layout */
+  .article-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    padding-top: var(--sp-8);
+    padding-bottom: var(--sp-12);
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .article-layout {
+      grid-template-columns: 260px 1fr;
+      gap: var(--sp-12);
+    }
+    .article-sidebar { order: -1; }
+  }
+
+  /* Sidebar */
+  .article-sidebar { display: none; }
+  @media (min-width: 1024px) {
+    .article-sidebar { display: block; }
+    .sidebar-sticky {
+      position: sticky;
+      top: 5rem;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-5);
+    }
+  }
+
+  .sidebar-meta {
+    background: var(--clr-bg-alt);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .meta-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--clr-text-muted);
+    margin-top: var(--sp-2);
+  }
+  .meta-label:first-child { margin-top: 0; }
+
+  .sidebar-badge { font-size: 0.75rem; }
+
+  /* Mobile TOC */
+  .mobile-toc {
+    margin-bottom: var(--sp-8);
+  }
+  @media (min-width: 1024px) { .mobile-toc { display: none; } }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: var(--text-sm);
+    color: var(--clr-text-muted);
+    margin-bottom: var(--sp-4);
+    flex-wrap: wrap;
+  }
+  .breadcrumb a { color: var(--clr-text-muted); }
+  .breadcrumb a:hover { color: var(--clr-primary); }
+
+  /* Article header */
+  .article-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-5);
+  }
+
+  .article-title {
+    font-size: clamp(1.5rem, 3.5vw, var(--text-4xl));
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--clr-primary);
+    margin-bottom: var(--sp-4);
+  }
+
+  .article-desc {
+    font-size: var(--text-xl);
+    color: var(--clr-text-muted);
+    line-height: 1.6;
+    margin-bottom: var(--sp-5);
+    max-width: 60ch;
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    font-size: var(--text-sm);
+    color: var(--clr-text-muted);
+    padding-bottom: var(--sp-6);
+    border-bottom: 2px solid var(--clr-border);
+    margin-bottom: var(--sp-8);
+  }
+  .article-meta strong { color: var(--clr-text); }
+
+  /* Related */
+  .related-section {
+    background: var(--clr-bg-alt);
+    border-top: 1px solid var(--clr-border);
+    padding: var(--sp-12) 0;
+    margin-top: var(--sp-12);
+  }
+  .related-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--clr-primary);
+    margin-bottom: var(--sp-6);
+  }
+  .related-grid {
+    display: grid;
+    gap: var(--sp-5);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px)  { .related-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .related-grid { grid-template-columns: repeat(3, 1fr); } }
+</style>

@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import BlogFilters from '../../components/BlogFilters';
+
+const posts = await getCollection('blog');
+const sorted = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const postsData = sorted.map(p => ({
+  id: p.id,
+  title: p.data.title,
+  description: p.data.description,
+  pubDate: p.data.pubDate.toISOString(),
+  updatedDate: p.data.updatedDate?.toISOString(),
+  category: p.data.category,
+  type: p.data.type,
+  audience: p.data.audience,
+  stage: p.data.stage,
+  author: p.data.author,
+}));
+---
+<BlogLayout
+  title="Blog – Tragarze.pl"
+  description="Wszystkie artykuły o przeprowadzkach: poradniki, porównania cenowe i case studies z polskiego rynku."
+>
+  <div class="container blog-index">
+    <header class="blog-header">
+      <h1 class="blog-title">Blog</h1>
+      <p class="blog-subtitle">
+        Praktyczne artykuły o każdym etapie przeprowadzki –
+        od planowania po formalności.
+      </p>
+    </header>
+
+    <BlogFilters posts={postsData} client:load />
+  </div>
+</BlogLayout>
+
+<style>
+  .blog-index {
+    padding-top: var(--sp-10);
+    padding-bottom: var(--sp-16);
+  }
+
+  .blog-header {
+    margin-bottom: var(--sp-8);
+  }
+
+  .blog-title {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--clr-primary);
+    margin-bottom: var(--sp-3);
+  }
+
+  .blog-subtitle {
+    font-size: var(--text-lg);
+    color: var(--clr-text-muted);
+    max-width: 52ch;
+    line-height: 1.6;
+  }
+</style>

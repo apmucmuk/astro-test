@@ -1,0 +1,97 @@
+---
+const year = new Date().getFullYear();
+
+const links = [
+  { href: '/blog', label: 'Blog' },
+  { href: '/blog?category=planowanie', label: 'Planowanie' },
+  { href: '/blog?category=pakowanie', label: 'Pakowanie' },
+  { href: '/blog?category=koszty', label: 'Koszty' },
+  { href: '/blog?category=transport', label: 'Transport' },
+  { href: '/blog?category=formalnosci', label: 'Formalności' },
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">
+        Tragarze<span class="accent">.pl</span>
+      </a>
+      <p class="footer-tagline">
+        Praktyczny blog o przeprowadzkach na polskim rynku.<br />
+        Poradniki, porównania i case studies.
+      </p>
+    </div>
+
+    <nav class="footer-nav" aria-label="Linki stopki">
+      <p class="footer-nav-title">Kategorie</p>
+      <ul role="list">
+        {links.map(l => (
+          <li><a href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <p>© {year} Tragarze.pl – Wszelkie prawa zastrzeżone</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--clr-primary);
+    color: rgba(255,255,255,0.8);
+    margin-top: var(--sp-16);
+  }
+
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    padding-top: var(--sp-12);
+    padding-bottom: var(--sp-8);
+  }
+
+  @media (min-width: 640px) {
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+
+  .footer-logo {
+    display: inline-block;
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    color: #fff;
+    text-decoration: none;
+    margin-bottom: var(--sp-3);
+  }
+  .accent { color: var(--clr-accent); }
+  .footer-tagline { font-size: var(--text-sm); line-height: 1.7; }
+
+  .footer-nav-title {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: var(--sp-4);
+  }
+  .footer-nav ul { list-style: none; }
+  .footer-nav li { margin-bottom: var(--sp-2); }
+  .footer-nav a {
+    color: rgba(255,255,255,0.75);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-nav a:hover { color: #fff; text-decoration: none; }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: var(--sp-4) 0;
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,0.45);
+  }
+</style>

@@ -7,8 +7,13 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     pubDate: z.date(),
-    category: z.string(),
-    categorySlug: z.string(),
+    updatedDate: z.date().optional(),
+    category: z.enum(['planowanie', 'pakowanie', 'koszty', 'transport', 'formalnosci', 'nietypowe']),
+    type: z.enum(['poradnik', 'porownanie', 'realizacja']),
+    audience: z.enum(['dom', 'firma', 'oba']),
+    stage: z.enum(['przed', 'w-trakcie', 'po', 'ogolne']),
+    author: z.string(),
+    image: z.string().optional(),
   }),
 });
 
