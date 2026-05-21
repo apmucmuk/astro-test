@@ -1,17 +1,52 @@
 ---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
 
+const posts = await getCollection('blog');
+const sorted = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const categories = [
+  { name: 'Технологии', slug: 'technology' },
+  { name: 'Путешествия', slug: 'travel' },
+];
 ---
+<Layout title="МойБлог — технологии и путешествия">
+  <section style="margin-bottom: 2.5rem;">
+    <h1 class="page-title">МойБлог</h1>
+    <p class="page-subtitle">Пишу о технологиях и путешествиях</p>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+    <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
+      {categories.map(cat => (
+        <a href={`/category/${cat.slug}`} class="post-card" style="padding:0.75rem 1.25rem; font-weight:600; color:#2563eb;">
+          {cat.name} →
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.1rem; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem;">
+      Все статьи
+    </h2>
+
+    <div class="posts-grid">
+      {sorted.map(post => {
+        const date = post.data.pubDate.toLocaleDateString('ru-RU', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        });
+        return (
+          <article class="post-card">
+            <a href={`/category/${post.data.categorySlug}`} class="category-tag">
+              {post.data.category}
+            </a>
+            <h2><a href={`/blog/${post.id}`}>{post.data.title}</a></h2>
+            <p>{post.data.description}</p>
+            <span class="meta">{date}</span>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+</Layout>
