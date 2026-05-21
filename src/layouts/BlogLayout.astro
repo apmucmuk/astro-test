@@ -252,4 +252,102 @@ const fullTitle = title === 'Tragarze.pl – Blog o przeprowadzkach'
     .prose { font-size: var(--text-base); }
     .prose h2 { font-size: var(--text-xl); }
   }
+
+  /* ── BlogFilters island ────────────────────────── */
+  .filters-root { display: flex; flex-direction: column; gap: var(--sp-6); }
+
+  .filters-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--clr-bg-alt);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .filter-group { display: flex; align-items: flex-start; gap: var(--sp-3); flex-wrap: wrap; }
+
+  .filter-group-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--clr-text-muted);
+    padding-top: 0.35rem;
+    white-space: nowrap;
+    min-width: 5rem;
+  }
+
+  .filter-btns { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+
+  .filter-btn {
+    padding: 0.25em 0.75em;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: opacity 0.15s, background 0.15s;
+    background: white;
+    font-family: inherit;
+  }
+
+  .filter-btn--category { border-color: #93c5fd; color: #1d4ed8; }
+  .filter-btn--category.is-active { background: #dbeafe; border-color: #1d4ed8; }
+  .filter-btn--type { border-color: #86efac; color: #15803d; }
+  .filter-btn--type.is-active { background: #dcfce7; border-color: #15803d; }
+  .filter-btn--audience { border-color: #fde68a; color: #92400e; }
+  .filter-btn--audience.is-active { background: #fef9c3; border-color: #92400e; }
+  .filter-btn:hover { opacity: 0.8; }
+
+  .filter-reset {
+    align-self: flex-start;
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--clr-text-muted);
+    cursor: pointer;
+    padding: 0.2em 0.5em;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+  }
+  .filter-reset:hover { color: var(--clr-text); background: var(--clr-border); }
+
+  .filter-count {
+    font-size: var(--text-sm);
+    color: var(--clr-text-muted);
+    font-weight: 500;
+  }
+
+  .bf-posts-grid {
+    display: grid;
+    gap: var(--sp-5);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px)  { .bf-posts-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .bf-posts-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .filter-empty {
+    text-align: center;
+    padding: var(--sp-12) var(--sp-4);
+    color: var(--clr-text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+
+  .filter-reset-inline {
+    background: var(--clr-primary);
+    color: white;
+    border: none;
+    padding: var(--sp-2) var(--sp-5);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .filter-reset-inline:hover { background: var(--clr-primary-hover); }
 </style>
